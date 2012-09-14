@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block extra_header %}
+<style type="text/css">
+.status_input textarea {
+  width: 646px;
+  height: 80px;
+}
+.status_input button {
+  float: right;
+  margin-right: 40px;
+}
+.time-line{
+  width: 547px;
+}
+ul {
+  margin: 0;
+}
+.user a {
+  font-weight: bold;
+  font-size: 14px;
+}
+.quote_status{
+  padding: 14px;
+  margin-bottom: 10px;
+  background-color: #EEE;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+.rt_quote{
+  background-color: #f3f3f3;
+  width: 510px;
+  padding: 6px 10px;
+  line-height: 16px;
+  margin-bottom: 6px;
+}
+#rt_content,{
+  width: 576px;
+  height: 76px;
+}
+.comment_content{
+  width: 552px;
+  height: 30px;
+}
+.credit-info dt{
+  float: left;
+}
+.credit-info dd{
+  margin-left: 60px;
+}
+dl.credit-info{
+  padding-top: 12px;
+  margin: -1px 0 15px;
+  overflow: hidden;
+  clear: both;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-color: #E9DFD5;
+  _zoom: 1;
+}
+
+.comment-lists :first-child{
+  border: 0;
+}
+dd.reply {
+  float: right;
+}
+.arrow_box {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #E9DFD5;
+  border-radius: 6px;
+}
+.arrow_box:after, .arrow_box:before {
+  bottom: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.arrow_box:after {
+  border-color: rgba(255, 255, 255, 0);
+  border-bottom-color: #ffffff;
+  border-width: 10px;
+  left: 95%;
+  margin-left: -10px;
+}
+.arrow_box:before {
+  border-color: rgba(233, 223, 213, 0);
+  border-bottom-color: #E9DFD5;
+  border-width: 11px;
+  left: 95%;
+  margin-left: -11px;
+}
+.arrow_box{
+  padding: 16px;
+  margin-top: 12px;
+}
+</style>
+
+{% endblock %}
+
+{% block page_body %}
+  {% block topbar %}
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">天鹅湖</a>
+      
+          <form action="" onsubmit="return dispatch()" class="navbar-search pull-left">
+            <input name="q" id="q" type="text" placeholder="Search" style="width: 160px">
+          </form>
+          <ul class="nav">
+            <li><a href=""></a></li>
+            <li><a href=""></a></li>
+            <li><a href=""></a></li>
+            <li><a href=""></a></li>
+          </ul>
+          <ul class="nav pull-right">
+            {% if user.is_authenticated %}
+              <li><a href=""><span></span></a></li>
+              <li>
+                <a href="">
+                  <span> {{ user.username }}的帐号 </span>
+                </a>
+              </li>
+              <li><a href="">
+                  
+                  <span id="nav_msg" class="{% if unread_message_count %}have-new-msg{% endif %}">
+                    消息({{unread_message_count}})
+                  </span>
+                </a>
+              </li>
+              <li><a href="/logout/"><span>退出</span></a></li>
+            {% else %}
+              <li><a href="/login/"><img src="/static/img/16.png"></a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
+  {% block container %}
+    <div class="container">
+     <div class="row-fluid">
+
+    <div  style="width:660px;">
+      <form action="{% url new_status %}" method="POST" name="form1" id="form1">
+                    <div class="status_input ">
+                      <div>你要说啥？</div>
+                        <textarea name="text" id="comment_text"></textarea><br>
+                        <button >发布</button>
+
+                    </div>
+      </form>
+      <ul class="timelines">
+        {% for one in status %}
+        <li class="timeline">
+          <div class="img fl">
+            <img src="/static/img/logo.jpeg">
+          </div>
+          <div class="info">
+            <p class="user"><a>{{one.user}}</a><p>
+            <p class="content">{{one.content}}</p>
+            {% if one.get_quote %}
+            <div class="quote_status">
+              <p class="q_user"><a>@{{one.get_quote.user}}</a></p>
+              <p class="q_content">{{one.get_quote.content}}</p>
+            </div>
+            {% endif%}
+            <div>
+              <div class="fl">
+                {{one.get_time_this}}
+              </div>
+              <div class="fr">
+                <a class="rt" id="rt_{{ one.id }}">转发({{one.rt_num}})</a>
+                <a class="comment" id="st_{{ one.id }}">评论({{one.comment_num}})</a>
+              </div>
+              <div class="clear"></div>              
+            </div>
+            <div class="arrow_box comment_box" id="comment_{{one.id}}"></div>
+
+          </div>
+          <div class="clear"></div>
+          
+        </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+    <div class="span2" id="test">
+      
+    </div>
+  </div>
+</div> 
+
+
+  {% endblock %}
+
+  {% block footer %}
+    <footer>
+      <div class="container">
+     
+        <p class="lks">
+          <a href="">关于</a>
+          <span>|</span>
+          <a href="">FAQ</a>
+          <span>|</span>
+
+        </p>
+        <p>
+          &copy; 2012 uibeswan.sinaapp.com, all rights reserved 
+        </p>
+      </div>
+    </footer>
+  {% endblock %}
+{% endblock %}        
+
+{% block footer_ext %}
+  {{ block.super }}
+<script type="text/javascript">
+names ={}
+$(function () {
+  $(".arrow_box").hide();
+  $(".comment").toggle(
+        function () {
+            var id = $(this).attr('id').split('_')[1];
+            get_comment(id);
+            $("#comment_" + id).show();
+        },
+        function () {
+            var id = $(this).attr('id').split('_')[1];
+            $("#comment_" + id).hide();
+  });
+
+
+$("a.rt").click(function(e) {
+                e.preventDefault();
+                var id = $(this).attr('id').split('_')[1];
+                status_info = $(this).parent().parent().parent();
+                quote_status= $('.quote_status',status_info);
+                if (quote_status.length == 1){
+                  quote_status="<div class='rt_quote' >"+$('.q_user',quote_status).text()+$('.q_content',quote_status).text()+"</div>";
+                  rt_textaera = "<textarea name='content' id='rt_content' style='width:516px;'>//"+$('.user',status_info).text()+": "+$('.content',status_info).text()+"</textarea>";
+                }else{
+                  quote_status= "<div class='rt_quote'>"+$('.user',status_info).text()+$('.content',status_info).text()+"</div>";
+                  rt_textaera = "<textarea name='content' id='rt_content'style='width:516px;' ></textarea>";
+                }
+                bootbox.dialog(quote_status+rt_textaera, [{
+                    "label" : "转发",
+                    "class" : "btn-primary",
+                    "callback": function(){
+                      content = $('#rt_content').val()
+                      $.post('/post_rt/'+id+'/',{"content":content},function(data){
+                        alert(data);
+                      });
+                    }
+               
+                }],{animate:false,header:"转发微博","backdrop":false});
+            });
+
+});
+function get_comment(status_id) {
+    $.get("{% url get_comment  %}", {'status_id':status_id},
+            function (data) {
+                $('#comment_' + status_id).html(data);
+                
+            });
+}
+
+</script>
+ 
+{% endblock %}        

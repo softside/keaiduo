@@ -1,0 +1,59 @@
+<form action='{% url post_comment %}' method='post' id='comment_form_{{status_id}}'>
+    {% csrf_token %}
+    <textarea id="comment_input_{{status_id}}" name="comment_text" class="comment_content"></textarea>
+
+    <p>
+        <input type='hidden' value='{{status_id}}' name='status_id'>
+        <button type='submit' class='btn fr'>评论</button>
+</form>
+<div class="comment-lists">
+    {% for one in comments %}
+        <dl class='credit-info'>
+            <dt><a href="">
+                <img src="/static/img/logo.jpeg" alt=""/></a>
+            </dt>
+
+            <dd class="comm-said">
+                <a href='' class='comm-name'>{{ one.user}}:</a>
+            {{ one.content|safe }}
+            </dd>
+            <dd class="reply"><a href="#" onclick="reply_at('{{one.user}}','comment_input_{{status_id}}');return false">回复</a>
+            </dd>
+        </dl>
+    {% endfor %}
+    {% if remain_num %}
+        <p class="last-comm">
+            后面还有{{ remain_num }}条评论，<a href=''>查看</a>
+        </p>
+    {% endif %}
+</div>
+<script type="text/javascript">
+    function insertAtCursor(obj, txt) {
+        obj.focus();
+        if (document.selection) {
+            sel = document.selection.createRange();
+            sel.text = txt;
+        } else {
+            var startPos = obj.selectionStart;
+            var scrollTop = obj.scrollTop;
+            var endPos = obj.selectionEnd;
+            obj.value = obj.value.substring(0, startPos) + txt + obj.value.substring(endPos, obj.value.length);
+            startPos += txt.length;
+            obj.setSelectionRange(startPos, startPos);
+            obj.scrollTop = scrollTop;
+        }
+    }
+
+    function reply_at(username, comment_id) {
+        var obj = document.getElementById(comment_id);
+        if (obj) {
+            obj.value = "";
+            insertAtCursor(obj, "@" + username + " :");
+            $(obj).focus();
+        } else {
+            alert("发表评论需要登录本站");
+        }
+    }
+
+</script>
+

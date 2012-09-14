@@ -1,0 +1,43 @@
+.navbar {
+  position: static;
+  margin-bottom: 20px;
+}
+body{
+	padding-bottom: 20px;
+
+}
+.clear{clear:both;display:block;overflow:hidden;visibility:hidden;width:0;height:0}
+.fr {float: right;}
+.fl {float: left;}
+
+.timeline {
+  border-bottom: 1px dashed #DDDDDD;
+  margin-top: 15px;
+  padding-bottom: 10px;
+  width: 100%;
+  display: inline;
+  float: left;
+}
+.timeline h3 {
+  font-size: 18px;
+  line-height: 24px;
+  margin-bottom: 5px;
+}
+.timeline .info {
+  padding-left:60px;
+}
+.timeline .info .extinfo {
+  font-size:12px;
+  color:gray;
+  padding: 0 0 2px 0;
+}
+.timeline .info .extinfo span {
+  padding-right: 10px;
+}
+.timeline .pic {
+  float: left;
+}
+.timeline .pic img {
+  max-width: 88px;
+  max-height: 100px;
+}

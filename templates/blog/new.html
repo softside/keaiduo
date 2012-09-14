@@ -1,0 +1,14 @@
+{% extends "home/index.html" %}
+
+
+      {% block content %}
+        <div class="content">
+        	<div class="hero-unit">
+        		<form action="{% url new_blog %}" method="post">
+        	{{form.as_p}}
+        	<button class="btn btn-primary">发布</button>
+        </from>
+        	</div>
+
+        </div>
+      {% endblock %}
