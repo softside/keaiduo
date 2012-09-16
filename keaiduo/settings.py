@@ -90,7 +90,7 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.Loader',
-    
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -125,6 +125,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'jsonfield',
     'home',
 )
 
@@ -160,4 +161,3 @@ LOGGING = {
 APP_KEY="2812701011"
 APP_SECRET="24478250a6df75b3bcba1033c8377e81"
 CALLBACK_URL = "http://uibeswan.sinaapp.com/sinacallback/"
-

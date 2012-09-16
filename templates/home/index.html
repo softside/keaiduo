@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-
+{% load jsonify %}
 {% block extra_header %}
 <style type="text/css">
+textarea {
+  resize: none;
+}
 .status_input textarea {
   width: 646px;
   height: 80px;
 }
-.status_input button {
-  float: right;
-  margin-right: 40px;
-}
+
 .time-line{
   width: 547px;
 }
@@ -156,7 +156,7 @@ dd.reply {
                     <div class="status_input ">
                       <div>你要说啥？</div>
                         <textarea name="text" id="comment_text"></textarea><br>
-                        <button >发布</button>
+                        <button class="btn fr">发布</button>
 
                     </div>
       </form>
@@ -168,11 +168,11 @@ dd.reply {
           </div>
           <div class="info">
             <p class="user"><a>{{one.user}}</a><p>
-            <p class="content">{{one.content}}</p>
+            <p class="content">{{one.get_status|safe}}</p>
             {% if one.get_quote %}
             <div class="quote_status">
               <p class="q_user"><a>@{{one.get_quote.user}}</a></p>
-              <p class="q_content">{{one.get_quote.content}}</p>
+              <p class="q_content">{{one.get_quote.get_status|safe}}</p>
             </div>
             {% endif%}
             <div>
@@ -259,7 +259,6 @@ $("a.rt").click(function(e) {
                     "callback": function(){
                       content = $('#rt_content').val()
                       $.post('/post_rt/'+id+'/',{"content":content},function(data){
-                        alert(data);
                       });
                     }
                

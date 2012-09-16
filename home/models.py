@@ -7,9 +7,11 @@ import time,re
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save                                                                                                            
+from django.db.models.signals import post_save
+from django.utils import simplejson as json                                                                                                          
 
 from taggit.managers import TaggableManager
+import jsonfield
 
 from home.mixins import CommonMixin
 from utils import *
@@ -64,6 +66,14 @@ class Status(CommonMixin,models.Model):
             rt_status = Status.objects.filter(pk=self.quote_id)
             if rt_status:
                 return rt_status[0]
+    def get_status(self):
+        key='status'+str(self.id)
+        from helper import *
+        status = get_value(key)
+        if status:
+            return status['status']
+        else:
+            return self.content
 
 def post_save_status(sender, instance, created, *args, **kwargs):
     if created:
@@ -73,7 +83,9 @@ def post_save_status(sender, instance, created, *args, **kwargs):
             profile = Profile.objects.filter(name=one)
             if profile:
                 status = status.replace("@"+one, "<a  href='/weibo/"+ one +"'>@"+one +"</a>" )
-                at_user.append(pet[0])
+                #at_user.append(profile.id)
+                from helper import *
+                create_status_cache(instance.id,{'status':status})
             else:
                 continue
 
@@ -84,4 +96,14 @@ post_save.connect(post_save_status, sender=Status)
 class Blog(CommonMixin,models.Model):
     user = models.ForeignKey(User, db_index=True, related_name="blog",unique=True)
     content = models.TextField(u'亲，说点什么', max_length=30)
+
+
+
+class MyCache(CommonMixin, models.Model):
+    key = models.CharField(max_length=60, verbose_name=u'key', unique=True,db_index=True)
+    value = jsonfield.JSONField()
+
+        
+
+
 
