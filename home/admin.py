@@ -1,6 +1,6 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 from django.contrib import admin
 from home.models import *
 
-for cls in [Profile,Blog,Status,MyCache]:
+for cls in [Blog,Status,MyCache]:
     admin.site.register(cls)

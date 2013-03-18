@@ -8,9 +8,8 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from django.utils import simplejson as json                                                                                                          
+from django.utils import simplejson as json
 
-from taggit.managers import TaggableManager
 import jsonfield
 
 from home.mixins import CommonMixin
@@ -19,22 +18,6 @@ from utils import *
 USER_RE = re.compile(r'\@(?P<pet_name>.*?)(?=\s|$|\:)')
 
 
-class Profile(CommonMixin, models.Model):
-    user = models.ForeignKey(User, db_index=True, related_name="profile",unique=True)
-    name = models.CharField(max_length=40, verbose_name=u'名字', unique=True)
-    logo = models.CharField(max_length=300,default="",blank=True)
-    sina_code = models.CharField(max_length=120, default='', blank=True, null=True, verbose_name='sina_code')#use for sina login
-    sina_expire = models.CharField(max_length=120, default='', blank=True, null=True, verbose_name='sina_expire')#use for sina login
-    date_created = models.DateTimeField(db_index=True,auto_now_add=True)
-
-    class Meta:
-        verbose_name = u'个人信息'
-        verbose_name_plural = verbose_name
-        ordering = ['-date_created']
-
-
-    def __unicode__(self):
-        return self.name
 
 class Status(CommonMixin,models.Model):
     user = models.ForeignKey(User, db_index=True, related_name="status")
@@ -55,7 +38,7 @@ class Status(CommonMixin,models.Model):
 
     def comment_num(self):
         num = Status.objects.filter(comment_id = self.id).count()
-        return num 
+        return num
 
     def rt_num(self):
         num = Status.objects.filter(forward_id = self.id).count()
@@ -90,7 +73,7 @@ def post_save_status(sender, instance, created, *args, **kwargs):
                 continue
 
     #TODO,目前只处理了@转换的部分，还需要处理@提示，回复提示
-post_save.connect(post_save_status, sender=Status)                                                                                                  
+post_save.connect(post_save_status, sender=Status)
 
 
 class Blog(CommonMixin,models.Model):
@@ -102,8 +85,3 @@ class Blog(CommonMixin,models.Model):
 class MyCache(CommonMixin, models.Model):
     key = models.CharField(max_length=60, verbose_name=u'key', unique=True,db_index=True)
     value = jsonfield.JSONField()
-
-        
-
-
-

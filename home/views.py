@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 from django.http import HttpResponse, HttpResponseRedirect
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django import forms
 from utils import *
-from models import Profile,Blog,Status
+from models import Blog,Status
 
 def logout_page(request):
     if request.user.is_authenticated():
@@ -27,13 +27,6 @@ def index(request,template_name="home/index.html"):
     ctx = {'status':status,}
     return render(request, template_name, ctx)
 
-class ProfileEditForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = (
-            'name',
-            )
-
 class BlogEditForm(forms.ModelForm):
     class Meta(object):
         model = Blog
@@ -41,7 +34,7 @@ class BlogEditForm(forms.ModelForm):
             'content',
             )
 
-@csrf_exempt            
+@csrf_exempt
 def new_blog(request,blog_id=None,template_name="blog/new.html"):
     if request.method == "POST":
         form = BlogEditForm(request.POST)
@@ -66,7 +59,7 @@ def edit_blog(request,blog_id=None,template_name="blog/new.html"):
     else:
         form = BlogEditForm(instance=blog)
         ctx = {'form':form}
-    return  render(request, template_name, ctx)    
+    return  render(request, template_name, ctx)
 
 
 @login_required
@@ -94,7 +87,7 @@ def new_status(request):
 #            else:
 #                status = client.post.statuses__update(status=text)
 #        except APIError:
-#            log.info(APIError)   
+#            log.info(APIError)
     return HttpResponseRedirect('/')
 @login_required
 def get_comment(request):
@@ -134,4 +127,3 @@ def post_rt(request, status_id):
         status = Status.objects.create(user=request.user, forward_id=forward_id, quote_id=quote_id,
                                        content=content,)
     return HttpResponse("Y")
-

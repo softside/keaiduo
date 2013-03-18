@@ -1,5 +1,5 @@
-#!/usr/bin/env python                                                                                                         
-# -*- coding: utf-8 -*-                                                                                                       
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import login
@@ -11,8 +11,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext as Context
 
 from keaiduo.settings import APP_KEY,APP_SECRET,CALLBACK_URL
-from home.models import Profile
-from home.views import ProfileEditForm
+from accounts.models import MyProfile
 
 from home.weibo import APIClient
 
@@ -49,7 +48,7 @@ def callback(request):
     if request.user.is_authenticated() and len(sinauser) > 0 and sinauser[0] != request.user:
             return HttpResponse("错误！每个微博帐号只能绑定一个帐号！")
     if len(sinauser) > 0 :
-        #处理已绑定的存在的用户                                                                                               
+        #处理已绑定的存在的用户
         login_user = sinauser[0]
 
         login_user.backend='django.contrib.auth.backends.ModelBackend'
@@ -63,7 +62,7 @@ def callback(request):
         #这个是处理绑定微薄账号的
         user = request.user
         user.username = username
-        user.save()                                                                                             
+        user.save()
         profile = user.get_profile()
         profile.sina_code = access_token
         profile.sina_expire = expires_in
@@ -79,7 +78,7 @@ def callback(request):
     form = ProfileEditForm(instance=profile)
     profile.name = name
     if t_profile:
-        profile.name=username 
+        profile.name=username
     profile.sina_code=access_token
     profile.sina_expire = expires_in
     profile.save()
@@ -98,8 +97,4 @@ def sina_sign_off(request):
     profile.sina_code =""
     profile.sina_expire=""
     profile.save()
-    return HttpResponseRedirect(reverse('profile_edit'))    
-
-
-
-
+    return HttpResponseRedirect(reverse('profile_edit'))
